@@ -45,6 +45,7 @@ async function seed(){
   const uPeter = await upsertUser({ name:'Peter Atkinson', email:'peter@zeustx.com', role:'employee' });
   const uLiliana = await upsertUser({ name:'Liliana Zaray', email:'liliana@zeustx.com', role:'employee' });
   const uHunterZeus = await upsertUser({ name:'Hunter Chan', email:'hunter@zeustx.com', role:'employee' });
+
   for (const u of [adminDalia,uJavier,uJulia,uElsye,uMonica,uJeff,uShafiq1588emp,uHunter1588,uWalker]) await ensureUC(u.id,c1588.id,u.id===adminDalia.id,false,u.email.includes('@1588ventures.com')?u.email:null);
   await ensureUC(approverRick1588.id, c1588.id, false, true, 'rperez@1588ventures.com');
   for (const u of [uNadia,uAli]) await ensureUC(u.id,cSunb.id,false,false,u.email);
@@ -53,6 +54,7 @@ async function seed(){
   await ensureUC(approverWalkerInnov.id, cInnov.id, true, true, 'wchan@1588ventures.com');
   for (const u of [uChris,uPatrick,uPeter,uLiliana,uHunterZeus]) await ensureUC(u.id,cZeus.id,false,false,u.email);
   await ensureUC(approverShafiqZeus.id, cZeus.id, true, true, 'shafiq@zeustx.com');
+
   const caps = { 'Travel':1000, 'Meals Per Diem':75, 'Entertainment Meals':500, 'Mileage':200, 'Marketing/Promotional':500 };
   const companies = [c1588, cZeus, cInnov, cSunb];
   for (const company of companies) {
@@ -74,7 +76,6 @@ async function seed(){
       });
     }
   }
-  // GL + mappings (with payable 2000)
   async function createGLAndMap(company, categories){
     const gls=[
       { name:'2000 · Employee Reimbursements Payable', number:'2000' },

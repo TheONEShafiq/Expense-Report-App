@@ -18,31 +18,31 @@
 </nav></header>
 
 <main>
-  <section>
-    <h2>Identify</h2>
+  <section><h2>Create / Update User</h2>
     <div class="grid2">
-      <label>Actor Email (dev auth) <input id="actorEmail" type="email" placeholder="you@company.com"></label>
-      <label>Report ID <input id="reportId" placeholder="copy from My Reports (full id)"></label>
+      <label>First Name <input id="firstName"></label>
+      <label>Last Name <input id="lastName"></label>
+      <label>Primary Email <input id="email" type="email"></label>
+      <label>Cell Phone <input id="phone" placeholder="+1XXXXXXXXXX"></label>
+      <label><input id="isAdmin" type="checkbox"> Admin</label>
     </div>
-    <label style="display:inline-flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="sumToggle"> Summarize (1 JE per report)</label>
-    <div class="grid2" style="margin-top:8px"><button id="loadPrev">Load Preview</button></div>
-  </section>
-  <section>
-    <h2>Header</h2>
-    <pre id="meta" class="table"></pre>
-  </section>
-  <section>
-    <h2>Lines</h2>
+    <h3>Assignments (per company)</h3>
     <div class="table-responsive">
-      <table id="linesTbl">
-        <thead><tr><th>Date</th><th>Merchant</th><th>Category</th><th>Debit GL</th><th>Credit GL</th><th>Amount</th><th>Memo</th></tr></thead>
-        <tbody></tbody>
-      </table>
+      <table id="assignTbl"><thead><tr><th>Company</th><th>Assign</th><th>Company Email</th><th>Primary?</th><th>Approver?</th></tr></thead><tbody></tbody></table>
     </div>
-    <div class="grid2"><button id="dlCsv">Download CSV</button><button id="dlIif">Download IIF (QBD)</button></div>
+    <div class="grid2" style="margin-top:8px">
+      <button id="saveUser">Save User</button>
+      <button id="clearForm" type="button">Clear</button>
+    </div>
+  </section>
+  <section><h2>Users</h2>
+    <div class="grid2"><label>Filter by Company <select id="filterCompany"></select></label></div>
+    <div class="table-responsive">
+      <table id="usersTbl"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Admin Toggle</th></tr></thead><tbody></tbody></table>
+    </div>
   </section>
 </main>
-<script src="/export-preview.js"></script>
+<script src="/user-setup.js"></script>
 
 <script src="/app.js"></script>
 </body></html>

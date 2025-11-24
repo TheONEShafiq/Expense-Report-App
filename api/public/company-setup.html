@@ -18,11 +18,19 @@
 </nav></header>
 
 <main>
-  <section><h2>Identify</h2><div class="grid2"><label>Primary Email (dev auth) <input id="actorEmail" type="email" placeholder="you@company.com"></label><label>Company <select id="companySel"></select></label></div></section>
-  <section><h2>Your Reports</h2><div class="table-responsive"><table id="repTbl"><thead><tr><th>Report ID</th><th>Status</th><th>Submitted</th><th>Approved</th><th>Total</th><th>Action</th></tr></thead><tbody></tbody></table></div></section>
-  <section><h2>Lines</h2><div id="reportMeta" class="table"></div><div class="table-responsive"><table id="linesTbl"><thead><tr><th>Date</th><th>Merchant</th><th>Category</th><th>Amount</th><th>Attendees</th><th>Policy</th><th>Line Status</th></tr></thead><tbody></tbody></table></div></section>
+  <section><h2>Create Company</h2>
+    <div class="grid2">
+      <label>Company Name <input id="name" placeholder="e.g., Acme Holdings"></label>
+      <label>Base Currency <select id="currency"><option value="USD">USD</option></select></label>
+    </div>
+    <div class="grid2" style="margin-top:8px"><button id="create">Create Company</button></div>
+    <small>Creating a company also seeds default GL accounts and category mappings.</small>
+  </section>
+  <section><h2>Existing Companies</h2>
+    <div class="table-responsive"><table id="coTbl"><thead><tr><th>Name</th><th>Currency</th></tr></thead><tbody></tbody></table></div>
+  </section>
 </main>
-<script src="/my-reports.js"></script>
+<script src="/company-setup.js"></script>
 
 <script src="/app.js"></script>
 </body></html>

@@ -13,6 +13,7 @@ import { usersAdminRouter } from './routes/users.js';
 import { approverRouter } from './routes/approver.js';
 import { glRouter } from './routes/gl.js';
 import { exportsRouter } from './routes/exports.js';
+import { meRouter } from './routes/me.js';
 
 const app = express();
 app.use(express.json({ limit: '5mb' }));
@@ -28,6 +29,7 @@ app.use('/', usersAdminRouter);
 app.use('/', approverRouter);
 app.use('/', glRouter);
 app.use('/', exportsRouter);
+app.use('/', meRouter);
 
 const port = Number(process.env.PORT || 3000);
 app.listen(port, () => console.log(`API listening on http://localhost:${port}`));

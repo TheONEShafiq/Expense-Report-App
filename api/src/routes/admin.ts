@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '../lib/db.js';
-import { attachActor } from '../lib/auth.js';
+import { attachActor, requireAdmin } from '../lib/auth.js';
 import { z } from 'zod';
 
 export const adminRouter = Router();
@@ -93,4 +93,34 @@ adminRouter.get('/admin/dashboard/per-diem', async (req, res) => {
 adminRouter.get('/admin/companies', async (_req, res) => {
   const companies = await prisma.company.findMany({ orderBy: { name: 'asc' }});
   res.json({ data: companies });
+});
+
+adminRouter.post('/admin/companies/create', requireAdmin, async (req, res) => {
+  const { name, baseCurrency } = req.body || {};
+  if (!name) return res.status(400).json({ error: 'name required' });
+  const curr = baseCurrency || 'USD';
+  const company = await prisma.company.create({ data: { name, baseCurrency: curr } });
+  // seed basic GL + mappings for new company
+  const gls = [
+    { name:'2000 · Employee Reimbursements Payable', number:'2000' },
+    { name:'6000 · Travel Expense', number:'6000' },
+    { name:'6100 · Meals & Entertainment', number:'6100' },
+    { name:'6200 · Mileage Reimbursement', number:'6200' },
+    { name:'6300 · Marketing & Promotion', number:'6300' },
+  ];
+  const created = [];
+  for (const g of gls) {
+    created.push(await prisma.gLAccount.create({ data: { companyId: company.id, name: g.name, number: g.number } }));
+  }
+  const cats = await prisma.category.findMany();
+  const byName = Object.fromEntries(cats.map(c => [c.name, c]));
+  const map = { 'Travel':'6000','Meals Per Diem':'6100','Entertainment Meals':'6100','Mileage':'6200','Marketing/Promotional':'6300' };
+  for (const [cat, gl] of Object.entries(map)) {
+    if (byName[cat]) {
+      const acc = created.find(x => x.number === gl);
+      if (acc) await prisma.categoryGLMapping.create({ data: { companyId: company.id, categoryId: byName[cat].id, glAccountId: acc.id } });
+    }
+  }
+  await prisma.airlineRule.create({ data: { companyId: company.id } });
+  res.json({ data: company });
 });
