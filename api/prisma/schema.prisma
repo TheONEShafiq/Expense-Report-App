@@ -1,0 +1,251 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "sqlite"; url = env("DATABASE_URL") }
+
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  name       String
+  firstName  String?
+  lastName   String?
+  phone      String?
+  role       Role
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  companies  UserCompany[]
+  reports    ExpenseReport[]
+  @@index([role])
+  @@index([active])
+}
+
+model Company {
+  id                   String @id @default(cuid())
+  name                 String @unique
+  baseCurrency         String @default("USD")
+  glAccounts           GLAccount[]
+  categoryGLMappings   CategoryGLMapping[]
+  thresholds           PolicyThreshold[]
+  airlineRules         AirlineRule[]
+  reports              ExpenseReport[]
+  perDiemOverrides     PerDiemOverride[]
+  mileageOverrides     MileageOverride[]
+}
+
+model UserCompany {
+  userId       String
+  companyId    String
+  isPrimary    Boolean @default(false)
+  isApprover   Boolean @default(false)
+  companyEmail String?
+  user         User    @relation(fields: [userId], references: [id])
+  company      Company @relation(fields: [companyId], references: [id])
+  @@id([userId, companyId])
+  @@index([companyId])
+  @@unique([companyId, companyEmail])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  parentId  String?
+  active    Boolean  @default(true)
+  mappings  CategoryGLMapping[]
+  expenses  Expense[]
+}
+
+model GLAccount {
+  id         String   @id @default(cuid())
+  companyId  String
+  name       String
+  number     String?
+  active     Boolean  @default(true)
+  company    Company  @relation(fields: [companyId], references: [id])
+  mappings   CategoryGLMapping[]
+  @@index([companyId])
+}
+
+model CategoryGLMapping {
+  id          String   @id @default(cuid())
+  companyId   String
+  categoryId  String
+  glAccountId String
+  company     Company  @relation(fields: [companyId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+  glAccount   GLAccount @relation(fields: [glAccountId], references: [id])
+  @@unique([companyId, categoryId])
+  @@index([companyId])
+}
+
+model PerDiemGlobal {
+  id             String   @id @default(cuid())
+  type           PerDiemType
+  dailyCapUsd    Decimal  @db.Decimal(10,2)
+  effectiveFrom  DateTime
+  effectiveTo    DateTime?
+}
+
+model MileageGlobal {
+  id             String   @id @default(cuid())
+  rateUsdPerMile Decimal  @db.Decimal(10,4)
+  effectiveFrom  DateTime
+  effectiveTo    DateTime?
+}
+
+model PerDiemOverride {
+  id            String      @id @default(cuid())
+  companyId     String
+  type          PerDiemType
+  dailyCapUsd   Decimal     @db.Decimal(10,2)
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+  company       Company     @relation(fields: [companyId], references: [id])
+  @@index([companyId])
+}
+
+model MileageOverride {
+  id              String   @id @default(cuid())
+  companyId       String
+  rateUsdPerMile  Decimal  @db.Decimal(10,4)
+  effectiveFrom   DateTime
+  effectiveTo     DateTime?
+  company         Company  @relation(fields: [companyId], references: [id])
+  @@index([companyId])
+}
+
+model PolicyThreshold {
+  id                 String   @id @default(cuid())
+  companyId          String
+  categoryId         String
+  perTxnCapUsd       Decimal  @db.Decimal(10,2)
+  perPersonCapUsd    Decimal? @db.Decimal(10,2)
+  evaluatePerPerson  Boolean  @default(false)
+  company            Company  @relation(fields: [companyId], references: [id])
+  category           Category @relation(fields: [categoryId], references: [id])
+  @@unique([companyId, categoryId])
+  @@index([companyId])
+}
+
+model AirlineRule {
+  id               String   @id @default(cuid())
+  companyId        String
+  allowFirstClass  Boolean  @default(false)
+  company          Company  @relation(fields: [companyId], references: [id])
+  @@index([companyId])
+}
+
+model ExpenseReport {
+  id          String   @id @default(cuid())
+  userId      String
+  companyId   String
+  status      ReportStatus
+  submittedAt DateTime?
+  approvedAt  DateTime?
+  approverId  String?
+  user        User     @relation(fields: [userId], references: [id])
+  company     Company  @relation(fields: [companyId], references: [id])
+  expenses    Expense[]
+  approvals   Approval[]
+  exports     Export[]
+  @@index([companyId])
+  @@index([userId])
+}
+
+model Expense {
+  id               String   @id @default(cuid())
+  reportId         String
+  categoryId       String
+  merchant         String
+  txnDate          DateTime
+  amountUsd        Decimal  @db.Decimal(12,2)
+  isMileage        Boolean  @default(false)
+  miles            Decimal? @db.Decimal(10,2)
+  isPerDiem        Boolean  @default(false)
+  perDiemType      PerDiemType?
+  notes            String?
+  ocrTotalUsd      Decimal? @db.Decimal(12,2)
+  ocrConfidence    Decimal? @db.Decimal(5,2)
+  amountValidated  Boolean  @default(false)
+  policyStatus     PolicyStatus @default(ok)
+  attendeesCount   Int      @default(1)
+  lineStatus       LineStatus @default(pending)
+  report           ExpenseReport @relation(fields: [reportId], references: [id])
+  category         Category @relation(fields: [categoryId], references: [id])
+  receipts         Receipt[]
+  attendees        ExpenseAttendee[]
+  @@index([reportId])
+  @@index([categoryId])
+}
+
+model ExpenseAttendee {
+  id        String  @id @default(cuid())
+  expenseId String
+  name      String
+  expense   Expense @relation(fields: [expenseId], references: [id])
+  @@index([expenseId])
+}
+
+model Receipt {
+  id           String  @id @default(cuid())
+  expenseId    String
+  objectKey    String
+  originalName String
+  expense      Expense @relation(fields: [expenseId], references: [id])
+}
+
+model Approval {
+  id         String   @id @default(cuid())
+  reportId   String
+  approverId String
+  decision   ApprovalDecision
+  decidedAt  DateTime
+  reason     String?
+  report     ExpenseReport @relation(fields: [reportId], references: [id])
+}
+
+model Export {
+  id          String   @id @default(cuid())
+  reportId    String
+  status      ExportStatus @default(queued)
+  qbdTxnId    String?
+  errorMsg    String?
+  attemptedAt DateTime     @default(now())
+  report      ExpenseReport @relation(fields: [reportId], references: [id])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  scope       AuditScope
+  entityId    String
+  action      String
+  meta        Json
+  createdAt   DateTime @default(now())
+}
+
+model ProviderAccount {
+  id          String  @id @default(cuid())
+  userId      String
+  provider    Provider
+  accessToken String
+  connectedAt DateTime @default(now())
+  user        User @relation(fields: [userId], references: [id])
+  imports     ProviderImport[]
+}
+
+model ProviderImport {
+  id                String  @id @default(cuid())
+  providerAccountId String
+  externalId        String
+  rawPayload        Json
+  importedAt        DateTime @default(now())
+  providerAccount   ProviderAccount @relation(fields: [providerAccountId], references: [id])
+}
+
+enum Role { employee approver admin }
+enum ReportStatus { draft submitted approved rejected exported }
+enum PolicyStatus { ok violation }
+enum LineStatus { pending auto_approved approved rejected }
+enum ApprovalDecision { approved rejected }
+enum ExportStatus { queued in_progress success error }
+enum PerDiemType { hotel food }
+enum AuditScope { admin expense export }
+enum Provider { uber expedia hotels_dot_com }

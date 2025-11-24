@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+<rect width="1200" height="800" fill="#0b1020"/>
+<text x="24" y="40" fill="#eef2ff" font-size="20" font-family="Inter, Arial">Expansion Port – UI Kit</text>
+<rect x="24" y="60" width="560" height="120" rx="16" fill="#121a3a" stroke="#25316a"/>
+<text x="40" y="88" fill="#eef2ff" font-size="14" font-family="Inter, Arial">AppBar</text>
+<rect x="40" y="100" width="520" height="56" rx="12" fill="#0f1733"/>
+<rect x="604" y="60" width="560" height="120" rx="16" fill="#121a3a" stroke="#25316a"/>
+<text x="620" y="88" fill="#eef2ff" font-size="14" font-family="Inter, Arial">Badges</text>
+<rect x="620" y="100" width="120" height="28" rx="999" fill="rgba(20,200,120,.15)" stroke="#25316a"/><text x="680" y="118" text-anchor="middle" fill="#eef2ff" font-size="12">approved</text>
+<rect x="760" y="100" width="120" height="28" rx="999" fill="rgba(255,170,0,.15)" stroke="#25316a"/><text x="820" y="118" text-anchor="middle" fill="#eef2ff" font-size="12">pending</text>
+<rect x="900" y="100" width="120" height="28" rx="999" fill="rgba(255,80,80,.18)" stroke="#25316a"/><text x="960" y="118" text-anchor="middle" fill="#eef2ff" font-size="12">rejected</text>
+</svg>

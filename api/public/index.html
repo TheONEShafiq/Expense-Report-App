@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin Dashboard – Expense MVP</title><link rel="stylesheet" href="/styles.css"><script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head>
+<body>
+<header><h1>Admin Dashboard</h1><button class="menu-btn" aria-label="Open menu" aria-expanded="false">☰</button><nav class="drawer" aria-label="Primary">
+  <a href="/" class="nav-link">Dashboard</a>
+  <a href="/add-expense.html" class="nav-link">Add Expense</a>
+  <a href="/my-reports.html" class="nav-link">My Reports</a>
+  <a href="/approve.html" class="nav-link">Review & Approve</a>
+  <a href="/policies.html" class="nav-link">Policies</a>
+  <a href="/gl-mapping.html" class="nav-link">GL Mapping</a>
+  <a href="/export-preview.html" class="nav-link">Export Preview</a>
+</nav></header>
+<main>
+  <section><h2>1) Expenses by Employee (Month + YTD)</h2><canvas id="chart1"></canvas><pre id="table1" class="table"></pre></section>
+  <section><h2>2) Expenses by Company & Category (Month + YTD)</h2><canvas id="chart2"></canvas><pre id="table2" class="table"></pre></section>
+  <section><h2>3) Per‑Diem Analysis by Employee</h2><pre id="table3" class="table"></pre></section>
+</main>
+<script src="/admin.js"></script><script src="/app.js"></script>
+</body></html>
