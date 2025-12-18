@@ -1,5 +1,5 @@
 async function fetchJSON(url){ const r=await fetch(url); if(!r.ok) throw new Error(await r.text()); return r.json(); }
-async function postJSON(url, body){ const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-Actor-Email':'dpena@1588ventures.com'},body:JSON.stringify(body)}); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+async function postJSON(url, body){ const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-Actor-Email':localStorage.getItem('actorEmail')||''},body:JSON.stringify(body)}); if(!r.ok) throw new Error(await r.text()); return r.json(); }
 
 const selCompany = document.getElementById('company');
 const limitsBody = document.querySelector('#limitsTbl tbody');
@@ -7,9 +7,9 @@ const approversBody = document.querySelector('#approversTbl tbody');
 
 let categories=[], users=[], userCompanies=[], thresholds=[], airline={}, perDiemOv=[], mileageOv=[], entCatId=null;
 
-async function loadCompanies(){ const { data } = await fetchJSON('/admin/companies'); selCompany.innerHTML = data.map(c=>`<option value="${c.id}">${c.name}</option>`).join(''); }
+async function loadCompanies(){ const { data } = await fetchJSON('/admin/companies'); selCompany.innerHTML = data.map(c=>`<option value="${c.id}">${c.name}</option>`).join(''); const storedCompany=localStorage.getItem('companyId'); if(storedCompany){ selCompany.value = storedCompany; } }
 async function loadAll(){
-  const companyId = selCompany.value;
+  const companyId = selCompany.value; localStorage.setItem('companyId', companyId);
   const look = await fetchJSON(`/admin/lookups?company_id=${companyId}`);
   categories = look.data.categories; users = look.data.users; userCompanies = look.data.userCompanies;
   const pol = await fetchJSON(`/admin/policies?company_id=${companyId}`);

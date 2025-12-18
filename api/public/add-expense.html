@@ -1,16 +1,22 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Add Expense – Expense MVP</title><link rel="stylesheet" href="/styles.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/styles.css"></head>
 <body>
-<header><h1>Add Expense</h1><button class="menu-btn" aria-label="Open menu" aria-expanded="false">☰</button><nav class="drawer" aria-label="Primary">
-  <a href="/" class="nav-link">Dashboard</a>
+<header><h1>Expense MVP</h1><button class="menu-btn" aria-label="Open menu" aria-expanded="false">☰</button>
+<nav class="drawer" aria-label="Primary">
+  <a href="/login.html" class="nav-link">Login</a>
+  <a href="/" class="nav-link" data-roles="admin">Dashboard</a>
+  <a href="/policies.html" class="nav-link" data-roles="admin">Policies</a>
+  <a href="/gl-mapping.html" class="nav-link" data-roles="admin">GL Mapping</a>
+  <a href="/user-setup.html" class="nav-link" data-roles="admin">User Setup</a>
+  <a href="/company-setup.html" class="nav-link" data-roles="admin">Company Setup</a>
+  <a href="/approve.html" class="nav-link" data-roles="approver">Review & Approve</a>
   <a href="/add-expense.html" class="nav-link">Add Expense</a>
   <a href="/my-reports.html" class="nav-link">My Reports</a>
-  <a href="/approve.html" class="nav-link">Review & Approve</a>
-  <a href="/policies.html" class="nav-link">Policies</a>
-  <a href="/gl-mapping.html" class="nav-link">GL Mapping</a>
   <a href="/export-preview.html" class="nav-link">Export Preview</a>
 </nav></header>
+
 <main>
   <section><h2>Who are you?</h2><div class="grid2"><label>Primary Email (dev auth) <input id="actorEmail" type="email" placeholder="e.g. jpena@1588ventures.com"></label><label>Company <select id="companySel"></select></label></div><small>We use the email to call the API via the <code>X-Actor-Email</code> header in this demo.</small></section>
   <section><h2>Receipt</h2><div class="grid2"><label>Upload Photo <input id="file" type="file" accept="image/*" capture="environment"></label><div id="previewWrap"><img id="preview" alt="" style="max-width:100%;display:none;border-radius:10px;border:1px solid var(--border)"></div></div><div class="grid2"><label>OCR Amount (mock) <input id="ocrAmount" type="number" step="0.01" placeholder="Tap Run OCR"></label><button id="runOcr" type="button">Run OCR (mock)</button></div></section>
@@ -18,5 +24,7 @@
   <section><div class="grid2"><button id="save" type="button">Save to Draft Report</button><button id="submitDraft" type="button">Submit Draft</button></div><div id="saveMsg" class="table" style="margin-top:8px"></div></section>
   <section><h2>My Draft (for selected company)</h2><div id="draftInfo" class="table" style="margin-bottom:8px"></div><div class="table-responsive"><table id="draftTbl"><thead><tr><th>Date</th><th>Merchant</th><th>Category</th><th>Amount</th><th>Attendees</th><th></th></tr></thead><tbody></tbody></table></div></section>
 </main>
-<script src="/app.js"></script><script src="/add-expense.js"></script>
+<script src="/add-expense.js"></script>
+
+<script src="/app.js"></script>
 </body></html>

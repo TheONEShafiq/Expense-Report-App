@@ -1,20 +1,28 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>GL Mapping – Expense MVP</title><link rel="stylesheet" href="/styles.css" /></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/styles.css"></head>
 <body>
-<header><h1>GL Mapping</h1><button class="menu-btn" aria-label="Open menu" aria-expanded="false">☰</button><nav class="drawer" aria-label="Primary">
-  <a href="/" class="nav-link">Dashboard</a>
+<header><h1>Expense MVP</h1><button class="menu-btn" aria-label="Open menu" aria-expanded="false">☰</button>
+<nav class="drawer" aria-label="Primary">
+  <a href="/login.html" class="nav-link">Login</a>
+  <a href="/" class="nav-link" data-roles="admin">Dashboard</a>
+  <a href="/policies.html" class="nav-link" data-roles="admin">Policies</a>
+  <a href="/gl-mapping.html" class="nav-link" data-roles="admin">GL Mapping</a>
+  <a href="/user-setup.html" class="nav-link" data-roles="admin">User Setup</a>
+  <a href="/company-setup.html" class="nav-link" data-roles="admin">Company Setup</a>
+  <a href="/approve.html" class="nav-link" data-roles="approver">Review & Approve</a>
   <a href="/add-expense.html" class="nav-link">Add Expense</a>
   <a href="/my-reports.html" class="nav-link">My Reports</a>
-  <a href="/approve.html" class="nav-link">Review & Approve</a>
-  <a href="/policies.html" class="nav-link">Policies</a>
-  <a href="/gl-mapping.html" class="nav-link">GL Mapping</a>
   <a href="/export-preview.html" class="nav-link">Export Preview</a>
 </nav></header>
+
 <main>
   <section><h2>Company</h2><div class="filters"><label>Company <select id="company"></select></label><small>Only admins should change GL settings.</small></div></section>
   <section><h2>GL Accounts</h2><div class="grid2"><div><label>Name <input id="glName" placeholder="e.g. 6000 · Travel Expense"></label><label>Number <input id="glNum" placeholder="6000"></label><button id="addGl">Add Account</button></div><div class="table-responsive"><table id="glTbl"><thead><tr><th>#</th><th>Name</th><th>Active</th></tr></thead><tbody></tbody></table></div></div></section>
   <section><h2>Category → GL Mapping</h2><div class="table-responsive"><table id="mapTbl"><thead><tr><th>Category</th><th>GL Account</th></tr></thead><tbody></tbody></table></div><button id="saveMap">Save Mappings</button></section>
 </main>
-<script src="/app.js"></script><script src="/gl-mapping.js"></script>
+<script src="/gl-mapping.js"></script>
+
+<script src="/app.js"></script>
 </body></html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login – Expense MVP</title><link rel="stylesheet" href="/styles.css"></head>
+<body>
+<header><h1>Login</h1></header>
+<main>
+  <section>
+    <h2>Identify</h2>
+    <div class="grid2">
+      <label>Primary Email <input id="actorEmail" type="email" placeholder="you@company.com"></label>
+      <label>Company <select id="companySel"></select></label>
+    </div>
+    <div class="grid2" style="margin-top:8px">
+      <button id="continue">Continue</button>
+    </div>
+    <small>This demo uses header-based auth. Your email + company determine your role.</small>
+  </section>
+</main>
+<script>
+async function fetchJSON(url){ const r=await fetch(url); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+const els = { email: document.getElementById('actorEmail'), company: document.getElementById('companySel'), btn: document.getElementById('continue') };
+async function loadCompanies(){ const j = await fetchJSON('/admin/companies'); els.company.innerHTML = j.data.map(c=>`<option value="${c.id}">${c.name}</option>`).join(''); const storedCompany=localStorage.getItem('companyId'); if(storedCompany){ els.company.value = storedCompany; } }
+els.btn.addEventListener('click', async () => {
+  const email = els.email.value.trim(); const companyId = els.company.value;
+  if(!email){ alert('Enter email'); return; }
+  localStorage.setItem('actorEmail', email); localStorage.setItem('companyId', companyId);
+  try{
+    const r = await fetch(`/me/roles?company_id=${companyId}`, { headers: { 'X-Actor-Email': email } });
+    if (!r.ok) throw new Error(await r.text());
+    const roles = (await r.json()).data;
+    if (roles.admin) location.href = '/'; else if (roles.approver) location.href = '/approve.html'; else location.href = '/add-expense.html';
+  } catch(e){ alert('Not assigned to this company or invalid user. Ask an admin to add you.'); }
+});
+loadCompanies().catch(e => alert(e.message));
+</script>
+</body></html>
