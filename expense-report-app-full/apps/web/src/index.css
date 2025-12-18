@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { color-scheme: dark; }
+body { background: #0B0E11; color: #E6E8EB; }
+a { color: #A7B0B8; }
+input, select, textarea { background:#151A1F; border:1px solid #2B323A; color:#E6E8EB; border-radius: 12px; padding: 10px; }
+button { background:#1E242B; border:1px solid #2B323A; color:#E6E8EB; border-radius: 12px; padding: 10px 16px; }
+button:hover { background:#222831; }
+.card { background:#151A1F; border:1px solid #2B323A; border-radius:16px; padding:16px; }

@@ -1,0 +1,79 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+model users {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  phone        String?
+  status       String    @default("active")
+  passwordHash String
+  created_at   DateTime  @default(now())
+  user_companies user_companies[]
+  user_roles     user_roles[]
+  reports        reports[]
+  expenses       expenses[]
+  approvals      approvals[]
+}
+model roles { id Int @id @default(autoincrement()); key String @unique; user_roles user_roles[] }
+model user_roles {
+  user_id Int
+  role_id Int
+  user users @relation(fields: [user_id], references: [id])
+  role roles @relation(fields: [role_id], references: [id])
+  @@id([user_id, role_id])
+}
+model companies {
+  id Int @id @default(autoincrement())
+  name String
+  code String @unique
+  base_currency String
+  active Boolean @default(true)
+  gl_accounts gl_accounts[]
+  per_diem_policies per_diem_policies[]
+  preapproval_limits preapproval_limits[]
+  reports reports[]
+  exports exports[]
+  user_companies user_companies[]
+}
+model user_companies { user_id Int; company_id Int; user users @relation(fields: [user_id], references: [id]); company companies @relation(fields: [company_id], references: [id]); @@id([user_id, company_id]) }
+model gl_accounts { id Int @id @default(autoincrement()); company_id Int; code String; name String; active Boolean @default(true); company companies @relation(fields: [company_id], references: [id]); @@unique([company_id, code]) }
+model per_diem_policies { id Int @id @default(autoincrement()); company_id Int; name String; currency String; daily_total Float; active Boolean @default(true); company companies @relation(fields: [company_id], references: [id]) }
+model preapproval_limits { id Int @id @default(autoincrement()); company_id Int; category String; limit_amount Float; currency String; company companies @relation(fields: [company_id], references: [id]); @@unique([company_id, category, currency]) }
+model fx_rates { id Int @id @default(autoincrement()); as_of_date DateTime @unique; usd_to_mxn_rate Float; source String? }
+model reports {
+  id Int @id @default(autoincrement())
+  user_id Int
+  company_id Int
+  week_start_date DateTime
+  status String
+  submitted_at DateTime?
+  approved_at DateTime?
+  total_amount Float?
+  total_currency String?
+  user users @relation(fields: [user_id], references: [id])
+  company companies @relation(fields: [company_id], references: [id])
+  expenses expenses[]
+  approvals approvals[]
+}
+model expenses {
+  id Int @id @default(autoincrement())
+  report_id Int?
+  user_id Int
+  company_id Int
+  date DateTime
+  category String
+  amount Float
+  currency String
+  description String?
+  status String @default("Draft")
+  report reports? @relation(fields: [report_id], references: [id])
+  user users @relation(fields: [user_id], references: [id])
+  company companies @relation(fields: [company_id], references: [id])
+  receipts receipts[]
+}
+model receipts { id Int @id @default(autoincrement()); expense_id Int; url String; mime String; size Int; uploaded_at DateTime @default(now()); expense expenses @relation(fields: [expense_id], references: [id]) }
+model approvals { id Int @id @default(autoincrement()); report_id Int; approver_id Int; decision String; decided_at DateTime @default(now()); notes String?; report reports @relation(fields: [report_id], references: [id]); approver users @relation(fields: [approver_id], references: [id]) }
+model audit_logs { id Int @id @default(autoincrement()); actor_user_id Int?; entity_type String; entity_id Int; action String; before_json Json?; after_json Json?; at DateTime @default(now()) }
+model exports { id Int @id @default(autoincrement()); company_id Int; period String; url String; generated_at DateTime @default(now()); company companies @relation(fields: [company_id], references: [id]) }
+model settings { key String @id; value Json }
